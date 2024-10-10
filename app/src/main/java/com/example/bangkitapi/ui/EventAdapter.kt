@@ -1,15 +1,14 @@
 package com.example.bangkitapi.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.bangkitapi.data.response.ListEventsItem
 import com.example.bangkitapi.databinding.ItemActiveEventBinding
 
-class ActiveEventAdapter(private val events: List<ListEventsItem>) :
-    RecyclerView.Adapter<ActiveEventAdapter.EventViewHolder>() {
+class EventAdapter(private val events: List<ListEventsItem>) :
+    RecyclerView.Adapter<EventAdapter.EventViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EventViewHolder {
         val binding = ItemActiveEventBinding.inflate(LayoutInflater.from(parent.context), parent, false)

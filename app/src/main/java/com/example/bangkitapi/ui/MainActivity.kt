@@ -5,7 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.bangkitapi.R
 import com.example.bangkitapi.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.bangkitapi.ui.fragment.FinishedFragment
+import com.example.bangkitapi.ui.fragment.UpcomingFragment
 
 class MainActivity : AppCompatActivity() {
 

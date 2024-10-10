@@ -2,8 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_upcoming"
+        android:icon="@drawable/baseline_upcoming_24"
         android:title="Upcoming" />
     <item
         android:id="@+id/nav_finished"
+        android:icon="@drawable/baseline_event_available_24"
         android:title="Finished" />
 </menu>
