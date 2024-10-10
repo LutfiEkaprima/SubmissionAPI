@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">BangkitApi</string>
+    <string name="event_judul">Judul Event</string>
+</resources>
