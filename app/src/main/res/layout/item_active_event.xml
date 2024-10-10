@@ -12,7 +12,6 @@
     android:layout_marginBottom="4dp"
     card_view:cardCornerRadius="4dp">
 
-    <!-- Use ScrollView to enable scrolling if content overflows -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +22,6 @@
             android:layout_height="wrap_content"
             android:padding="8dp">
 
-            <!-- Event Image -->
             <ImageView
                 android:id="@+id/img_item_photo"
                 android:layout_width="0dp"
@@ -35,7 +33,6 @@
                 card_view:layout_constraintEnd_toEndOf="parent"
                 tools:src="@tools:sample/avatars" />
 
-            <!-- Event Title -->
             <TextView
                 android:id="@+id/tv_item_name"
                 android:layout_width="0dp"

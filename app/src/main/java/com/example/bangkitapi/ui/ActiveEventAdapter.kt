@@ -22,7 +22,7 @@ class ActiveEventAdapter(private val events: List<ListEventsItem>) :
 
     override fun getItemCount(): Int = events.size
 
-    inner class EventViewHolder(private val binding: ItemActiveEventBinding) :
+    class EventViewHolder(private val binding: ItemActiveEventBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(event: ListEventsItem) {
             binding.tvItemName.text = event.name
