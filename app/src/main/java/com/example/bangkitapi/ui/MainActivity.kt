@@ -1,28 +1,15 @@
 package com.example.bangkitapi.ui
 
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bangkitapi.data.retrofit.ApiConfig
-import com.example.bangkitapi.data.response.EventResponse
-import com.example.bangkitapi.data.response.ListEventsItem
+import androidx.fragment.app.Fragment
+import com.example.bangkitapi.R
 import com.example.bangkitapi.databinding.ActivityMainBinding
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var eventAdapter: ActiveEventAdapter
-
-    companion object {
-        private const val TAG = "MainActivity"
-        private const val RESTAURANT_ID = "1"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,53 +19,25 @@ class MainActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        setupRecyclerView()
-        findRestaurant()
+        setupBottomNavigation()
+        loadFragment(UpcomingFragment())
     }
 
-    private fun setupRecyclerView() {
-        binding.rvEvents.layoutManager = LinearLayoutManager(this)
-        binding.rvEvents.addItemDecoration(
-            DividerItemDecoration(this, LinearLayoutManager.VERTICAL)
-        )
-    }
-
-    private fun findRestaurant() {
-        showLoading(true)
-        val client = ApiConfig.getApiService().getEvent(RESTAURANT_ID)
-        client.enqueue(object : Callback<EventResponse> {
-            override fun onResponse(
-                call: Call<EventResponse>,
-                response: Response<EventResponse>
-            ) {
-                showLoading(false)
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        setRestaurantData(responseBody.listEvents)
-                    }
-                } else {
-                    Log.e(TAG, "onFailure: ${response.message()}")
-                }
+    private fun setupBottomNavigation() {
+        binding.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            val fragment: Fragment = when (item.itemId) {
+                R.id.nav_upcoming -> UpcomingFragment()
+                R.id.nav_finished -> FinishedFragment()
+                else -> UpcomingFragment()
             }
-
-            override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                showLoading(false)
-                Log.e(TAG, "onFailure: ${t.message}")
-            }
-        })
-    }
-
-    private fun setRestaurantData(events: List<ListEventsItem>) {
-        eventAdapter = ActiveEventAdapter(events)
-        binding.rvEvents.adapter = eventAdapter
-    }
-
-    private fun showLoading(isLoading: Boolean) {
-        if (isLoading) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
+            loadFragment(fragment)
+            true
         }
+    }
+
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
     }
 }
