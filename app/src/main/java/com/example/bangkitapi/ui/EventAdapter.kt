@@ -32,7 +32,6 @@ class EventAdapter(
                 .load(event.mediaCover)
                 .into(binding.imgItemPhoto)
 
-            // Set item click listener
             binding.cardView.setOnClickListener {
                 onItemClick(event)
             }

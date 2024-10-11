@@ -37,8 +37,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, fragment)
-            .commit()
+        val fragmentTransaction = supportFragmentManager.beginTransaction()
+
+        val currentFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainer)
+        if (currentFragment != null && currentFragment::class == fragment::class) {
+            return
+        }
+
+        fragmentTransaction.replace(R.id.fragmentContainer, fragment).commit()
     }
 }

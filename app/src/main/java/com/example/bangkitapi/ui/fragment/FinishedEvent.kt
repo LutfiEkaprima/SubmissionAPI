@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bangkitapi.DetailEventActivity
+import com.example.bangkitapi.ui.DetailEventActivity
 import com.example.bangkitapi.data.retrofit.ApiConfig
 import com.example.bangkitapi.data.response.EventResponse
 import com.example.bangkitapi.data.response.ListEventsItem
-import com.example.bangkitapi.databinding.FragmentUpcomingEventBinding
+import com.example.bangkitapi.databinding.FragmentFinishedEventBinding
 import com.example.bangkitapi.ui.EventAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,7 +20,7 @@ import retrofit2.Response
 
 class FinishedFragment : Fragment() {
 
-    private var _binding: FragmentUpcomingEventBinding? = null
+    private var _binding: FragmentFinishedEventBinding? = null
     private val binding get() = _binding!!
     private lateinit var eventAdapter: EventAdapter
     private val restaurantId = "0"
@@ -29,7 +29,7 @@ class FinishedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentUpcomingEventBinding.inflate(inflater, container, false)
+        _binding = FragmentFinishedEventBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -55,33 +55,38 @@ class FinishedFragment : Fragment() {
                 call: Call<EventResponse>,
                 response: Response<EventResponse>
             ) {
-                showLoading(false)
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        setEventData(responseBody.listEvents)
+                if (isAdded) {
+                    showLoading(false)
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null) {
+                            setEventData(responseBody.listEvents)
+                        }
                     }
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                showLoading(false)
+                if (isAdded) {
+                    showLoading(false)
+                }
             }
         })
     }
 
     private fun setEventData(events: List<ListEventsItem>) {
         eventAdapter = EventAdapter(events) { event ->
-            // Handle item click, start detail activity
             val intent = Intent(requireContext(), DetailEventActivity::class.java)
-            intent.putExtra("event_data", event) // Pass the event data using Parcelable
+            intent.putExtra("event_data", event)
             startActivity(intent)
         }
         binding.rvEvents.adapter = eventAdapter
     }
 
     private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        if (isAdded) {
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
     override fun onDestroyView() {

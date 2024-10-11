@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.bangkitapi.DetailEventActivity
+import com.example.bangkitapi.ui.DetailEventActivity
 import com.example.bangkitapi.data.retrofit.ApiConfig
 import com.example.bangkitapi.data.response.EventResponse
 import com.example.bangkitapi.data.response.ListEventsItem
-import com.example.bangkitapi.databinding.FragmentFinishedEventBinding
+import com.example.bangkitapi.databinding.FragmentUpcomingEventBinding
 import com.example.bangkitapi.ui.EventAdapter
 import retrofit2.Call
 import retrofit2.Callback
@@ -21,7 +21,7 @@ import retrofit2.Response
 
 class UpcomingFragment : Fragment() {
 
-    private var _binding: FragmentFinishedEventBinding? = null
+    private var _binding: FragmentUpcomingEventBinding? = null
     private val binding get() = _binding!!
     private lateinit var eventAdapter: EventAdapter
     private val restaurantId = "1"
@@ -30,7 +30,7 @@ class UpcomingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentFinishedEventBinding.inflate(inflater, container, false)
+        _binding = FragmentUpcomingEventBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -56,17 +56,21 @@ class UpcomingFragment : Fragment() {
                 call: Call<EventResponse>,
                 response: Response<EventResponse>
             ) {
-                showLoading(false)
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        setEventData(responseBody.listEvents)
+                if (isAdded) {
+                    showLoading(false)
+                    if (response.isSuccessful) {
+                        val responseBody = response.body()
+                        if (responseBody != null) {
+                            setEventData(responseBody.listEvents)
+                        }
                     }
                 }
             }
 
             override fun onFailure(call: Call<EventResponse>, t: Throwable) {
-                showLoading(false)
+                if (isAdded) {
+                    showLoading(false)
+                }
             }
         })
     }
@@ -81,7 +85,9 @@ class UpcomingFragment : Fragment() {
     }
 
     private fun showLoading(isLoading: Boolean) {
-        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        if (isAdded) {
+            binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
     }
 
     override fun onDestroyView() {
