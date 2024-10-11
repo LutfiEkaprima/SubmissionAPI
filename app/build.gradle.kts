@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -53,4 +54,7 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation ("org.jetbrains.kotlin:kotlin-parcelize-runtime:1.4.10")
+    implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
+    implementation ("androidx.core:core-ktx:1.6.0")
 }
