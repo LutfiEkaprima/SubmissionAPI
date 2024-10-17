@@ -5,10 +5,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import com.bumptech.glide.Glide
@@ -17,18 +14,17 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.example.bangkitapi.R
+import com.example.bangkitapi.databinding.ActivityDetailEventBinding
 import com.example.bangkitapi.data.response.ListEventsItem
 
 class DetailEventActivity : AppCompatActivity() {
 
-    private lateinit var progressBar: ProgressBar
-    val tgl = "Tanggal Acara : "
-    val kuota = "Kuota : "
+    private lateinit var binding: ActivityDetailEventBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detail_event)
-
-        progressBar = findViewById(R.id.progressBar)
+        binding = ActivityDetailEventBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         showLoading(true)
 
@@ -36,28 +32,25 @@ class DetailEventActivity : AppCompatActivity() {
             intent.getParcelableExtra("event_data", ListEventsItem::class.java)
         } else {
             @Suppress("DEPRECATION")
-            intent.getParcelableExtra<ListEventsItem>("event_data")
+            intent.getParcelableExtra("event_data")
         }
 
         event?.let {
-            findViewById<TextView>(R.id.tvEventName).text = it.name
-            findViewById<TextView>(R.id.tvEventDescription).text =
-                HtmlCompat.fromHtml(it.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
-            findViewById<TextView>(R.id.tvEventBeginTime).text = tgl + it.beginTime
-            val quotasisa = it.quota - it.registrants
-            findViewById<TextView>(R.id.tvquota).text = kuota + quotasisa
-            findViewById<TextView>(R.id.tvownerName).text = it.ownerName
-            val buttonLink = findViewById<Button>(R.id.link)
-            val linkuri = Uri.parse(it.link)
+            binding.tvEventName.text = it.name
+            binding.tvEventDescription.text = HtmlCompat.fromHtml(it.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
+            binding.tvEventBeginTime.text = getString(R.string.event_date, it.beginTime)
 
-            buttonLink.setOnClickListener {
+            val quotasisa = it.quota - it.registrants
+            binding.tvquota.text = getString(R.string.event_quota, quotasisa)
+            binding.tvownerName.text = it.ownerName
+
+            val linkuri = Uri.parse(it.link)
+            binding.link.setOnClickListener {
                 val intent = Intent(Intent.ACTION_VIEW).apply {
                     data = linkuri
                 }
                 startActivity(intent)
             }
-
-            val imageView = findViewById<ImageView>(R.id.imgEventCover)
 
             Glide.with(this)
                 .load(it.mediaCover)
@@ -83,14 +76,14 @@ class DetailEventActivity : AppCompatActivity() {
                         return false
                     }
                 })
-                .into(imageView)
+                .into(binding.imgEventCover)
         } ?: run {
             showLoading(false)
         }
     }
 
     private fun showLoading(isLoading: Boolean) {
-        progressBar.visibility = if (isLoading) {
+        binding.progressBar.visibility = if (isLoading) {
             ProgressBar.VISIBLE
         } else {
             ProgressBar.GONE
