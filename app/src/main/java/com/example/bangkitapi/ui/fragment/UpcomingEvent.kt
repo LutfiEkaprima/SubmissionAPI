@@ -14,7 +14,7 @@ import com.example.bangkitapi.data.retrofit.ApiConfig
 import com.example.bangkitapi.data.response.EventResponse
 import com.example.bangkitapi.data.response.ListEventsItem
 import com.example.bangkitapi.databinding.FragmentUpcomingEventBinding
-import com.example.bangkitapi.ui.EventAdapter
+import com.example.bangkitapi.ui.adapter.EventAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

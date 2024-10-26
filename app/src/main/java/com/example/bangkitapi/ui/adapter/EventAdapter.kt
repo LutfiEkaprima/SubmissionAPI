@@ -1,4 +1,4 @@
-package com.example.bangkitapi.ui
+package com.example.bangkitapi.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

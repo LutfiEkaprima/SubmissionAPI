@@ -14,4 +14,8 @@
     <string name="deskripsi">Deskripsi</string>
     <string name="favorite_event">Favorite Event</string>
     <string name="dark_mode">Dark Mode</string>
+    <string name="upcoming">Upcoming</string>
+    <string name="finished">Finished</string>
+    <string name="favorite">Favorite</string>
+    <string name="setting">Setting</string>
 </resources>

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -42,19 +43,26 @@ class DetailEventActivity : AppCompatActivity() {
 
         showLoading(true)
 
-        val event = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val eventData: Parcelable? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra("event_data", ListEventsItem::class.java)
+                ?: intent.getParcelableExtra("event_data", EventEntity::class.java)
         } else {
-            @Suppress("DEPRECATION")
             intent.getParcelableExtra("event_data")
         }
 
-        event?.let {
-            setupUI(it)
-            checkFavoriteStatus(it)
-            setupFavoriteButton(it)
-        } ?: run {
-            showLoading(false)
+        when (eventData) {
+            is ListEventsItem -> {
+                setupUI(eventData)
+                checkFavoriteStatus(eventData.name)
+                setupFavoriteButton(eventData)
+                showLoading(false)
+            }
+            is EventEntity -> {
+                setupUIFromEventEntity(eventData)
+                checkFavoriteStatus(eventData.eventName)
+                setupFavoriteButtonFromEntity(eventData)
+                showLoading(false)
+            }
         }
     }
 
@@ -62,9 +70,7 @@ class DetailEventActivity : AppCompatActivity() {
         binding.tvEventName.text = event.name
         binding.tvEventDescription.text = HtmlCompat.fromHtml(event.description, HtmlCompat.FROM_HTML_MODE_LEGACY)
         binding.tvEventBeginTime.text = getString(R.string.event_date, event.beginTime)
-
-        val quotasisa = event.quota - event.registrants
-        binding.tvquota.text = getString(R.string.event_quota, quotasisa)
+        binding.tvquota.text = getString(R.string.event_quota, event.quota - event.registrants)
         binding.tvownerName.text = event.ownerName
 
         val linkuri = Uri.parse(event.link)
@@ -78,23 +84,12 @@ class DetailEventActivity : AppCompatActivity() {
         Glide.with(this)
             .load(event.mediaCover)
             .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>,
-                    isFirstResource: Boolean
-                ): Boolean {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>, isFirstResource: Boolean): Boolean {
                     showLoading(false)
                     return false
                 }
 
-                override fun onResourceReady(
-                    resource: Drawable,
-                    model: Any,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource,
-                    isFirstResource: Boolean
-                ): Boolean {
+                override fun onResourceReady(resource: Drawable, model: Any, target: Target<Drawable>?, dataSource: DataSource, isFirstResource: Boolean): Boolean {
                     showLoading(false)
                     return false
                 }
@@ -102,9 +97,21 @@ class DetailEventActivity : AppCompatActivity() {
             .into(binding.imgEventCover)
     }
 
-    private fun checkFavoriteStatus(event: ListEventsItem) {
+    private fun setupUIFromEventEntity(event: EventEntity) {
+        binding.tvEventName.text = event.eventName
+        binding.tvEventDescription.text = HtmlCompat.fromHtml(event.eventDescription, HtmlCompat.FROM_HTML_MODE_LEGACY)
+        binding.tvEventBeginTime.text = getString(R.string.event_date, event.eventBeginTime)
+        binding.tvquota.text = getString(R.string.event_quota, event.eventQuota)
+        binding.tvownerName.text = event.eventOwner
+
+        Glide.with(this)
+            .load(event.eventCoverUrl)
+            .into(binding.imgEventCover)
+    }
+
+    private fun checkFavoriteStatus(eventName: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val favoriteEvent = eventDao.getFavoriteByName(event.name)
+            val favoriteEvent = eventDao.getFavoriteByName(eventName)
             isFavorited = favoriteEvent != null
             withContext(Dispatchers.Main) {
                 updateFavoriteIcon(isFavorited)
@@ -115,9 +122,19 @@ class DetailEventActivity : AppCompatActivity() {
     private fun setupFavoriteButton(event: ListEventsItem) {
         binding.fabFavorite.setOnClickListener {
             if (isFavorited) {
-                removeFavorite(event)
+                removeFavorite(event.name)
             } else {
                 addFavorite(event)
+            }
+        }
+    }
+
+    private fun setupFavoriteButtonFromEntity(event: EventEntity) {
+        binding.fabFavorite.setOnClickListener {
+            if (isFavorited) {
+                removeFavorite(event.eventName)
+            } else {
+                addFavoriteFromEntity(event)
             }
         }
     }
@@ -130,7 +147,8 @@ class DetailEventActivity : AppCompatActivity() {
                 eventBeginTime = event.beginTime,
                 eventQuota = event.quota - event.registrants,
                 eventOwner = event.ownerName,
-                eventCoverUrl = event.mediaCover)
+                eventCoverUrl = event.mediaCover
+            )
             eventDao.insertFavorite(favoriteEvent)
             isFavorited = true
             withContext(Dispatchers.Main) {
@@ -139,9 +157,19 @@ class DetailEventActivity : AppCompatActivity() {
         }
     }
 
-    private fun removeFavorite(event: ListEventsItem) {
+    private fun addFavoriteFromEntity(event: EventEntity) {
         CoroutineScope(Dispatchers.IO).launch {
-            eventDao.deleteFavorite(event.name)
+            eventDao.insertFavorite(event)
+            isFavorited = true
+            withContext(Dispatchers.Main) {
+                updateFavoriteIcon(isFavorited)
+            }
+        }
+    }
+
+    private fun removeFavorite(eventName: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            eventDao.deleteFavorite(eventName)
             isFavorited = false
             withContext(Dispatchers.Main) {
                 updateFavoriteIcon(isFavorited)

@@ -3,18 +3,18 @@
     <item
         android:id="@+id/nav_upcoming"
         android:icon="@drawable/baseline_upcoming_24"
-        android:title="Upcoming" />
+        android:title="@string/upcoming" />
     <item
         android:id="@+id/nav_finished"
         android:icon="@drawable/baseline_event_available_24"
-        android:title="Finished" />
+        android:title="@string/finished" />
     <item
         android:id="@+id/nav_favorite"
         android:icon="@drawable/baseline_favorite_24"
-        android:title="Favorite" />
+        android:title="@string/favorite" />
 
     <item
         android:id="@+id/nav_setting"
         android:icon="@drawable/baseline_build_24"
-        android:title="Search" />
+        android:title="@string/setting" />
 </menu>
