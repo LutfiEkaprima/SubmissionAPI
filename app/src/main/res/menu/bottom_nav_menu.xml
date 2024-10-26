@@ -8,4 +8,13 @@
         android:id="@+id/nav_finished"
         android:icon="@drawable/baseline_event_available_24"
         android:title="Finished" />
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/baseline_favorite_24"
+        android:title="Favorite" />
+
+    <item
+        android:id="@+id/nav_setting"
+        android:icon="@drawable/baseline_build_24"
+        android:title="Search" />
 </menu>

@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.bangkitapi.R
 import com.example.bangkitapi.databinding.ActivityMainBinding
+import com.example.bangkitapi.ui.fragment.FavoriteFragment
 import com.example.bangkitapi.ui.fragment.FinishedFragment
+import com.example.bangkitapi.ui.fragment.SettingsFragment
 import com.example.bangkitapi.ui.fragment.UpcomingFragment
 
 class MainActivity : AppCompatActivity() {
@@ -18,8 +20,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar?.hide()
-
         setupBottomNavigation()
         loadFragment(UpcomingFragment())
     }
@@ -29,6 +29,8 @@ class MainActivity : AppCompatActivity() {
             val fragment: Fragment = when (item.itemId) {
                 R.id.nav_upcoming -> UpcomingFragment()
                 R.id.nav_finished -> FinishedFragment()
+                R.id.nav_favorite -> FavoriteFragment()
+                R.id.nav_setting -> SettingsFragment()
                 else -> UpcomingFragment()
             }
             loadFragment(fragment)

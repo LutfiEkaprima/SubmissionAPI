@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class FinishedFragment : Fragment() {
+
 
     private var _binding: FragmentFinishedEventBinding? = null
     private val binding get() = _binding!!
@@ -35,7 +37,7 @@ class FinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        (activity as AppCompatActivity).supportActionBar?.title = "Finished Event"
         setupRecyclerView()
         findEvents()
     }

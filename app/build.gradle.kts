@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("com.google.devtools.ksp")
     id ("kotlin-parcelize")
 }
 
@@ -57,4 +58,11 @@ dependencies {
     implementation ("org.jetbrains.kotlin:kotlin-parcelize-runtime:1.4.10")
     implementation ("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
     implementation ("androidx.core:core-ktx:1.6.0")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.room.compiler)
+    implementation ("androidx.room:room-runtime:2.5.0")
+    annotationProcessor ("androidx.room:room-compiler:2.5.0")
+    implementation ("androidx.room:room-ktx:2.5.0")
 }
