@@ -13,12 +13,13 @@ abstract class EventDatabase : RoomDatabase() {
     companion object {
         @Volatile private var INSTANCE: EventDatabase? = null
 
+
         fun getDatabase(context: Context): EventDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     EventDatabase::class.java,
-                    "event_database"
+                    "favorite_database"
                 ).build()
                 INSTANCE = instance
                 instance

@@ -14,5 +14,7 @@ data class EventEntity(
     val eventBeginTime: String,
     val eventQuota: Int,
     val eventOwner: String,
-    val eventCoverUrl: String
+    val eventCoverUrl: String,
+    val eventLink: String,
+
 ) : Parcelable

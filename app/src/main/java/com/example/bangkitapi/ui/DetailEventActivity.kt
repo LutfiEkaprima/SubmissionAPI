@@ -104,6 +104,14 @@ class DetailEventActivity : AppCompatActivity() {
         binding.tvquota.text = getString(R.string.event_quota, event.eventQuota)
         binding.tvownerName.text = event.eventOwner
 
+        val linkuri = Uri.parse(event.eventLink)
+        binding.link.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW).apply {
+                data = linkuri
+            }
+            startActivity(intent)
+        }
+
         Glide.with(this)
             .load(event.eventCoverUrl)
             .into(binding.imgEventCover)
@@ -147,7 +155,8 @@ class DetailEventActivity : AppCompatActivity() {
                 eventBeginTime = event.beginTime,
                 eventQuota = event.quota - event.registrants,
                 eventOwner = event.ownerName,
-                eventCoverUrl = event.mediaCover
+                eventCoverUrl = event.mediaCover,
+                eventLink = event.link
             )
             eventDao.insertFavorite(favoriteEvent)
             isFavorited = true
